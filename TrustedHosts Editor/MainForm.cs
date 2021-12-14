@@ -12,10 +12,12 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Net;
+using System.ServiceProcess;
+using System.Net.Sockets;
 
 namespace TrustedHosts_Editor
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         string[] backupList = { };
         ContextMenuStrip listboxContextMenu;
@@ -23,7 +25,7 @@ namespace TrustedHosts_Editor
         bool closeWhenFinished = false;
         bool closeVerified = false;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             listboxContextMenu = new ContextMenuStrip();
@@ -31,44 +33,117 @@ namespace TrustedHosts_Editor
             Hostnames_ListBox.ContextMenuStrip = listboxContextMenu;
         }
 
+        string StringToBool(bool value, string falseValue, string trueValue)
+        {
+            if (value)
+            {
+                return trueValue;
+            }
+            else return falseValue;
+        }
+
         private void listboxContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            if (Hostnames_ListBox.SelectedItems.Count > 0)
+            listboxContextMenu.Items.Clear();
+            ToolStripMenuItem copyItem = new ToolStripMenuItem("Copy");
+            copyItem.Click += (o, r) =>
             {
-                listboxContextMenu.Items.Clear();
-                ToolStripMenuItem copyItem = new ToolStripMenuItem("Copy");
-                copyItem.Click += (o, r) =>
-                {
-                    Clipboard.SetText(Hostnames_ListBox.SelectedItem.ToString());
-                };
+                Clipboard.SetText(Hostnames_ListBox.SelectedItem.ToString());
+            };
 
-                ToolStripMenuItem editItem = new ToolStripMenuItem("Edit");
-                editItem.Click += (o, r) =>
+            ToolStripMenuItem editItem = new ToolStripMenuItem("Edit");
+            editItem.Click += (o, r) =>
+            {
+                int index = Hostnames_ListBox.SelectedIndex;
+                AddHostname addEntry = new AddHostname(Hostnames_ListBox.SelectedItem.ToString());
+                if (addEntry.ShowDialog() == DialogResult.OK)
                 {
-                    int index = Hostnames_ListBox.SelectedIndex;
-                    AddEntry addEntry = new AddEntry(Hostnames_ListBox.SelectedItem.ToString());
-                    if (addEntry.ShowDialog() == DialogResult.OK)
+                    Hostnames_ListBox.Items[index] = addEntry.Hostname;
+                }
+            };
+
+            ToolStripMenuItem testHost = new ToolStripMenuItem("Test Host");
+            testHost.Click += (o, r) =>
+            {
+                String Hostname = Hostnames_ListBox.SelectedItem.ToString();
+                if (!(Uri.CheckHostName(Hostname) == UriHostNameType.Unknown))
+                {
+                    try
                     {
-                        Hostnames_ListBox.Items[index] = addEntry.Hostname;
+                        IPHostEntry entry = Dns.GetHostEntry(Hostname);
+                        StringBuilder @string = new StringBuilder();
+                        @string.AppendLine(String.Format("Hostname: {0}", entry.HostName));
+                        @string.AppendLine();
+                            //List<string> ipAddresses = new List<string>();
+                            //label_IpAddress.Text = String.Format("IP Address: {0}", String.Join(", ", ipAddresses));
+
+                            //string ipv4 = entry.AddressList.First(ip => ip.AddressFamily == AddressFamily.InterNetwork));
+                            List<IPAddress> ipAddresses = new List<IPAddress>(entry.AddressList);
+
+                        List<IPAddress> ipv4_list = ipAddresses.FindAll(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+                        List<IPAddress> ipv6_list = ipAddresses.FindAll(ip => ip.AddressFamily == AddressFamily.InterNetworkV6);
+
+                        string ipv4_prefix = "";
+                        string ipv6_prefix = "";
+
+                        if (ipv4_list.Count > 1)
+                        {
+                            ipv4_prefix = "\n";
+                        }
+
+                        if (ipv6_list.Count > 1)
+                        {
+                            ipv6_prefix = "\n";
+                        }
+
+                            //string ipv4 = String.Join(", ", ipv4_list);
+                            //string ipv6 = String.Join(", ", ipv6_list);
+
+                            string ipv4 = String.Join("\n", ipv4_list);
+                        string ipv6 = String.Join("\n", ipv6_list);
+
+
+                        @string.AppendLine(String.Format("IPv4 Address{1}: {0}", ipv4, StringToBool((ipv4_list.Count > 1), "", "es"), ipv4_prefix));
+                        if (ipv4_list.Count > 1)
+                            @string.AppendLine();
+                        @string.AppendLine(String.Format("IPv6 Address{1}: {0}", ipv6, StringToBool((ipv6_list.Count > 1), "", "es"), ipv6_prefix));
+
+                        MessageBox.Show(@string.ToString(), String.Format("{0} details", Hostname), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                };
-
-                ToolStripMenuItem testHost = new ToolStripMenuItem("Test Host");
-                editItem.Click += (o, r) =>
+                    catch
+                    {
+                        MessageBox.Show(String.Format("Could not communicate with host {0}.", Hostname), "Host not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
                 {
-                    // Insert code to connect to the specified host and verify it exists
-                };
+                    MessageBox.Show(String.Format("Could not lookup host because hostname {0} is invalid.", Hostname), "Hostname invalid", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
 
+            ToolStripMenuItem saveItem = new ToolStripMenuItem("Update TrustedHosts");
+            saveItem.Click += (o, r) =>
+            {
+                backgroundWorker_setTrustedHosts.RunWorkerAsync();
+            };
+
+            if (!IsSelectedItemNull())
+            {
                 listboxContextMenu.Items.Add(copyItem);
                 listboxContextMenu.Items.Add(editItem);
                 listboxContextMenu.Items.Add(new ToolStripSeparator());
                 listboxContextMenu.Items.Add(testHost);
+                //listboxContextMenu.Items.Add(new ToolStripSeparator());
+            }
+            else
+            {
+                listboxContextMenu.Items.Add(saveItem);
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            AddEntry addEntry = new AddEntry();
+            AddHostname addEntry = new AddHostname();
             if (addEntry.ShowDialog() == DialogResult.OK)
             {
                 Hostnames_ListBox.Items.Add(addEntry.Hostname);
@@ -85,9 +160,9 @@ namespace TrustedHosts_Editor
             backupList = array;
         }
 
-        String[] getTrustedHosts()
+        List<String> getTrustedHosts()
         {
-            String[] temp = { };
+            List<String> trustedHosts = new List<String>();
             using (PowerShell powerShell = PowerShell.Create().AddScript(@"Get-Item WSMan:\localhost\Client\TrustedHosts"))
             {
                 Collection<PSObject> output = powerShell.Invoke();
@@ -100,10 +175,17 @@ namespace TrustedHosts_Editor
                 //    }
                 //}
                 val = (string)output.ElementAt(0).Properties.ElementAt(7).Value;
-                Debug.WriteLine(val);
-                temp = val.Split(',');
+                // Debug.WriteLine(val);
+                foreach (string item in val.Split(','))
+                {
+                    // If string is not empty
+                    if (item.Length > 0)
+                    {
+                        trustedHosts.Add(item);
+                    }
+                }
             }
-            return temp;
+            return trustedHosts;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -161,16 +243,25 @@ namespace TrustedHosts_Editor
 
         private void backgroundWorker_readTrustedHosts_doWork(object sender, DoWorkEventArgs e)
         {
-            Thread.Sleep(100);
+            ServiceController service = new ServiceController("WinRM");
+            if (service.Status != ServiceControllerStatus.Running)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    ToolStrip_ShowStatus("Starting WinRM service...");
+                });
+                service.Start();
+                service.WaitForStatus(ServiceControllerStatus.Running);
+            }
             this.Invoke((MethodInvoker)delegate
             {
                 panel1.Enabled = false;
                 ToolStrip_ShowStatus("Getting TrustedHosts...");
             });
-            string[] hosts = getTrustedHosts();
+            List<String> hosts = getTrustedHosts();
             this.Invoke((MethodInvoker)delegate
             {
-                RefreshList(hosts);
+                RefreshList(hosts.ToArray());
             });
         }
 
@@ -236,7 +327,7 @@ namespace TrustedHosts_Editor
                 isNull = (Hostnames_ListBox.SelectedIndex < 0);
                 //isNull = false;
             }
-            catch (Exception ex)
+            catch
             {
                 isNull = true;
             }
@@ -251,16 +342,16 @@ namespace TrustedHosts_Editor
                 Hostnames_ListBox.SelectedIndex = Hostnames_ListBox.IndexFromPoint(e.Location);
                 if (!IsSelectedItemNull())
                 {
-                    if (Hostnames_ListBox.ContextMenuStrip == null)
-                    {
-                        Hostnames_ListBox.ContextMenuStrip = listboxContextMenu;
-                    }
-                    //Hostnames_ListBox.ContextMenuStrip.Close();
-                    //listboxContextMenu.Show();
+                    // if (Hostnames_ListBox.ContextMenuStrip == null)
+                    // {
+                    //     Hostnames_ListBox.ContextMenuStrip = listboxContextMenu;
+                    // }
+                    // Hostnames_ListBox.ContextMenuStrip.Close();
+                    listboxContextMenu.Show();
                 }
                 else
                 {
-                    Hostnames_ListBox.ContextMenuStrip = null;
+                    //Hostnames_ListBox.ContextMenuStrip = null;
                 }
             }
         }
@@ -274,7 +365,6 @@ namespace TrustedHosts_Editor
             else if (!closeVerified)
             {
                 string[] current = Hostnames_ListBox.Items.Cast<string>().ToArray();
-
                 if (!current.SequenceEqual(backupList))
                 {
                     // Changes were made
@@ -283,8 +373,13 @@ namespace TrustedHosts_Editor
                     DialogResult dialogResult = MessageBox.Show("Save changes?", "Save?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (dialogResult == DialogResult.Yes)
                     {
+                        backupList = current;
                         closeWhenFinished = true;
                         backgroundWorker_setTrustedHosts.RunWorkerAsync();
+                    }
+                    else
+                    {
+                        e.Cancel = false;
                     }
                 }
             }
