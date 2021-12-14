@@ -12,23 +12,25 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 4.7.2
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
     
-    - name: List dir
-      run: dir TrustedHostsEditor
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+    - name: Create Build Directory
+      run: mkdir _build
+    
+    - name: Restore Packages
+      run: nuget restore TrustedHostsEditor.exe
+    - name: Build Solution
+      run: |
+        msbuild.exe TrustedHostsEditor.sln /p:platform="Any CPU" /p:configuration="Debug" /p:OutDir="_build"
     
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
         name: build
-        path: TrustedHostsEditor/bin
+        path: "./_build"
