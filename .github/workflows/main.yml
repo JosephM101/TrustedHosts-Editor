@@ -1,0 +1,38 @@
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+      with:
+        nuget-version: latest
+    
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+    - name: Create Build Directory
+      run: mkdir _build
+    
+    - name: Restore Packages
+      run: nuget restore TrustedHostsEditor.exe
+    - name: Build Solution
+      run: |
+        msbuild.exe TrustedHostsEditor.sln /p:platform="Any CPU" /p:configuration="Debug" /p:OutDir="_build"
+    
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: build
+        path: "./_build"
