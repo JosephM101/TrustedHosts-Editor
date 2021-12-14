@@ -12,6 +12,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - name: List Directory
+      run: dir
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
       
@@ -20,9 +23,12 @@ jobs:
       with:
         nuget-version: latest
     
-    #- name: Navigate to Workspace
-    #  run: cd $GITHUB_WORKSPACE
-      
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+
+    - name: List Directory
+      run: dir
+
     - name: Create Build Directory
       run: mkdir _build
     
