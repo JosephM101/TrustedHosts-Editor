@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrustedHosts Editor", "TrustedHosts Editor\TrustedHosts Editor.csproj", "{1900F95E-2C2F-436D-9C0F-3DCC7BB527FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrustedHostsEditor", "TrustedHostsEditor\TrustedHostsEditor.csproj", "{1900F95E-2C2F-436D-9C0F-3DCC7BB527FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
