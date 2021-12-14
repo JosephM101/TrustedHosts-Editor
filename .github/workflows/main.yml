@@ -38,6 +38,9 @@ jobs:
     - name: Restore Packages
       run: nuget restore TrustedHostsEditor.sln
       
+    - name: List Directory
+      run: ls
+
     - name: Build Solution
       run: |
         msbuild.exe TrustedHostsEditor.sln /p:platform="Any CPU" /p:configuration="Debug" /p:OutDir="_build"
@@ -46,4 +49,4 @@ jobs:
       uses: actions/upload-artifact@v2.2.4
       with:
         name: build
-        path: "./_build"
+        path: "_build"
