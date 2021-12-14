@@ -1,4 +1,4 @@
-# TrustedHosts Editor
+# TrustedHostsEditor
  
 A quick and easy way to modify your system's TrustedHosts list.
 
