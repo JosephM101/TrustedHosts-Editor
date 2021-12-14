@@ -22,11 +22,13 @@ jobs:
     
     - name: Navigate to Workspace
       run: cd $GITHUB_WORKSPACE
+      
     - name: Create Build Directory
       run: mkdir _build
     
     - name: Restore Packages
-      run: nuget restore TrustedHostsEditor.exe
+      run: nuget restore TrustedHostsEditor.sln
+      
     - name: Build Solution
       run: |
         msbuild.exe TrustedHostsEditor.sln /p:platform="Any CPU" /p:configuration="Debug" /p:OutDir="_build"
