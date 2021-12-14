@@ -26,8 +26,8 @@ jobs:
       with:
         nuget-version: latest
     
-    - name: Navigate to Workspace
-      run: cd $GITHUB_WORKSPACE
+    # - name: Navigate to Workspace
+    #   run: cd $GITHUB_WORKSPACE
 
     - name: List Directory
       run: ls
@@ -49,4 +49,4 @@ jobs:
       uses: actions/upload-artifact@v2.2.4
       with:
         name: build
-        path: "_build"
+        path: _build
