@@ -9,7 +9,7 @@ Click the Add button in the bottom right corner. In the window that appears, typ
 TIP: You can click the "Test Hostname" button to check if the hostname or IP address you entered exists. If you entered an IP address, this feature will automatically retrieve the hostname.
 
 ### Edit hostname entry
-Right-click the hostname entry, and click "Edit".
+Right-click the hostname entry, and click "Edit". 
 
 ### Delete host entry
 Click on the entry, then click the "Remove" button in the bottom-right corner.
