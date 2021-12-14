@@ -1,3 +1,5 @@
+[![.NET](https://github.com/JosephM101/TrustedHostsEditor/actions/workflows/main.yml/badge.svg)](https://github.com/JosephM101/TrustedHostsEditor/actions/workflows/main.yml)
+
 # TrustedHostsEditor
  
 A quick and easy way to modify your system's TrustedHosts list.
