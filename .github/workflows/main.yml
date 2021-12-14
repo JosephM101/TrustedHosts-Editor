@@ -41,12 +41,22 @@ jobs:
     - name: List Directory
       run: ls
 
+    #- name: Build Solution
+    #  run: |
+    #    msbuild.exe TrustedHostsEditor.sln /p:platform="Any CPU" /p:configuration="Debug" /p:OutDir="_build"
+
+    #- name: Upload Build Artifact
+    #  uses: actions/upload-artifact@v2.2.4
+    #  with:
+    #    name: build
+    #    path: _build
+
     - name: Build Solution
       run: |
-        msbuild.exe TrustedHostsEditor.sln /p:platform="Any CPU" /p:configuration="Debug" /p:OutDir="_build"
-    
+        msbuild.exe TrustedHostsEditor.sln /p:platform="Any CPU" /p:configuration="Debug"
+
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
         name: build
-        path: _build
+        path: TrustedHostsEditor/bin
