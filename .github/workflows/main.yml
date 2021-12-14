@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: List Directory
-      run: dir
+      run: ls
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
@@ -27,7 +27,7 @@ jobs:
       run: cd $GITHUB_WORKSPACE
 
     - name: List Directory
-      run: dir
+      run: ls
 
     - name: Create Build Directory
       run: mkdir _build
