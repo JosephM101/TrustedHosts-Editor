@@ -349,6 +349,7 @@ namespace TrustedHosts_Editor
                             {
                                 Hostnames_ListBox.Items.Add(host);
                             }
+                            backgroundWorker_setTrustedHosts.RunWorkerAsync();
                         }
                     }
                 }
