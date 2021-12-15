@@ -107,7 +107,7 @@ namespace TrustedHosts_Editor
             }
             catch
             {
-                MessageBox.Show("The host could not be contacted.", "Host not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(String.Format("Host {0} could not be contacted.", Hostname), "Host not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -135,7 +135,7 @@ namespace TrustedHosts_Editor
                         }
                         catch
                         {
-                            if (MessageBox.Show("The host could not be contacted. Add IP address anyway?", "Host not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (MessageBox.Show(String.Format("{0} could not be contacted. Add it anyway?", Hostname), "Host not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 this.DialogResult = DialogResult.OK;
                             }

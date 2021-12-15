@@ -78,7 +78,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Hostname_textBox.Location = new System.Drawing.Point(12, 27);
             this.Hostname_textBox.Margin = new System.Windows.Forms.Padding(2);
-            this.Hostname_textBox.MaxLength = 64;
+            this.Hostname_textBox.MaxLength = 63;
             this.Hostname_textBox.Name = "Hostname_textBox";
             this.Hostname_textBox.Size = new System.Drawing.Size(355, 20);
             this.Hostname_textBox.TabIndex = 0;

@@ -42,6 +42,15 @@ namespace TrustedHosts_Editor
             else return falseValue;
         }
 
+        void RemoveSelected()
+        {
+            // Remove selected item from list
+            if (!IsSelectedItemNull())
+            {
+                Hostnames_ListBox.Items.RemoveAt(Hostnames_ListBox.SelectedIndex);
+            }
+        }
+
         private void listboxContextMenu_Opening(object sender, CancelEventArgs e)
         {
             listboxContextMenu.Items.Clear();
@@ -60,6 +69,12 @@ namespace TrustedHosts_Editor
                 {
                     Hostnames_ListBox.Items[index] = addEntry.Hostname;
                 }
+            };
+
+            ToolStripMenuItem removeItem = new ToolStripMenuItem("Remove");
+            removeItem.Click += (o, r) =>
+            {
+                RemoveSelected();
             };
 
             ToolStripMenuItem testHost = new ToolStripMenuItem("Test Host");
@@ -127,10 +142,12 @@ namespace TrustedHosts_Editor
                 backgroundWorker_setTrustedHosts.RunWorkerAsync();
             };
 
+
             if (!IsSelectedItemNull())
             {
                 listboxContextMenu.Items.Add(copyItem);
                 listboxContextMenu.Items.Add(editItem);
+                listboxContextMenu.Items.Add(removeItem);
                 listboxContextMenu.Items.Add(new ToolStripSeparator());
                 listboxContextMenu.Items.Add(testHost);
                 //listboxContextMenu.Items.Add(new ToolStripSeparator());
@@ -190,11 +207,7 @@ namespace TrustedHosts_Editor
 
         private void button2_Click(object sender, EventArgs e)
         {
-            // Remove selected item from list
-            if (!IsSelectedItemNull())
-            {
-                Hostnames_ListBox.Items.RemoveAt(Hostnames_ListBox.SelectedIndex);
-            }
+            RemoveSelected();
         }
 
         bool saveTrustedHosts(string[] entries)
