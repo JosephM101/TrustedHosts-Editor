@@ -14,6 +14,8 @@ using System.Threading;
 using System.Net;
 using System.ServiceProcess;
 using System.Net.Sockets;
+using System.IO;
+using TrustedHostsEditor;
 
 namespace TrustedHosts_Editor
 {
@@ -24,6 +26,8 @@ namespace TrustedHosts_Editor
 
         bool closeWhenFinished = false;
         bool closeVerified = false;
+
+        bool justStarted = true;
 
         public MainForm()
         {
@@ -67,7 +71,16 @@ namespace TrustedHosts_Editor
                 AddHostname addEntry = new AddHostname(Hostnames_ListBox.SelectedItem.ToString());
                 if (addEntry.ShowDialog() == DialogResult.OK)
                 {
-                    Hostnames_ListBox.Items[index] = addEntry.Hostname;
+                    // Check if entry already exists 
+                    // case insensitive
+                    if (Hostnames_ListBox.Items.Contains(addEntry.Hostname.ToLower()) || Hostnames_ListBox.Items.Contains(addEntry.Hostname.ToUpper()))
+                    {
+                        MessageBox.Show(String.Format("Hostname {0} already exists.", addEntry.Hostname), "Hostname already exists", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        Hostnames_ListBox.Items[index] = addEntry.Hostname;
+                    }
                 }
             };
 
@@ -89,11 +102,7 @@ namespace TrustedHosts_Editor
                         StringBuilder @string = new StringBuilder();
                         @string.AppendLine(String.Format("Hostname: {0}", entry.HostName));
                         @string.AppendLine();
-                            //List<string> ipAddresses = new List<string>();
-                            //label_IpAddress.Text = String.Format("IP Address: {0}", String.Join(", ", ipAddresses));
-
-                            //string ipv4 = entry.AddressList.First(ip => ip.AddressFamily == AddressFamily.InterNetwork));
-                            List<IPAddress> ipAddresses = new List<IPAddress>(entry.AddressList);
+                        List<IPAddress> ipAddresses = new List<IPAddress>(entry.AddressList);
 
                         List<IPAddress> ipv4_list = ipAddresses.FindAll(ip => ip.AddressFamily == AddressFamily.InterNetwork);
                         List<IPAddress> ipv6_list = ipAddresses.FindAll(ip => ip.AddressFamily == AddressFamily.InterNetworkV6);
@@ -110,17 +119,14 @@ namespace TrustedHosts_Editor
                         {
                             ipv6_prefix = "\n";
                         }
+                        //string ipv4 = String.Join(", ", ipv4_list);
+                        //string ipv6 = String.Join(", ", ipv6_list);
 
-                            //string ipv4 = String.Join(", ", ipv4_list);
-                            //string ipv6 = String.Join(", ", ipv6_list);
-
-                            string ipv4 = String.Join("\n", ipv4_list);
+                        string ipv4 = String.Join("\n", ipv4_list);
                         string ipv6 = String.Join("\n", ipv6_list);
 
-
                         @string.AppendLine(String.Format("IPv4 Address{1}: {0}", ipv4, StringToBool((ipv4_list.Count > 1), "", "es"), ipv4_prefix));
-                        if (ipv4_list.Count > 1)
-                            @string.AppendLine();
+                        if (ipv4_list.Count > 1) { @string.AppendLine(); }
                         @string.AppendLine(String.Format("IPv6 Address{1}: {0}", ipv6, StringToBool((ipv6_list.Count > 1), "", "es"), ipv6_prefix));
 
                         MessageBox.Show(@string.ToString(), String.Format("{0} details", Hostname), MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -158,12 +164,29 @@ namespace TrustedHosts_Editor
             }
         }
 
+        bool EntryExists(string entry)
+        {
+            if (Hostnames_ListBox.Items.Contains(entry.ToLower()) || Hostnames_ListBox.Items.Contains(entry.ToUpper()))
+            {
+                return true;
+            }
+            else return false;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             AddHostname addEntry = new AddHostname();
             if (addEntry.ShowDialog() == DialogResult.OK)
             {
-                Hostnames_ListBox.Items.Add(addEntry.Hostname);
+                //Check if entry already exists (not case sensitive)
+                if (EntryExists(addEntry.Hostname))
+                {
+                    MessageBox.Show(String.Format("Hostname {0} already exists.", addEntry.Hostname), "Hostname already exists", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    Hostnames_ListBox.Items.Add(addEntry.Hostname);
+                }
             }
         }
 
@@ -293,6 +316,44 @@ namespace TrustedHosts_Editor
 
         private void backgroundWorker_readTrustedHosts_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (justStarted)
+            {
+                List<ServerInfo> servers;
+                if (ServerListParser.GetServers(out servers))
+                {
+                    List<string> UntrustedHosts = new List<string>();
+                    foreach (ServerInfo server in servers)
+                    {
+                        if (!Hostnames_ListBox.Items.Contains(server.Name) && server.Status == false)
+                        {
+                            UntrustedHosts.Add(server.Name);
+                        }
+                    }
+                    if (UntrustedHosts.Count > 0)
+                    {
+                        StringBuilder @string = new StringBuilder();
+                        @string.AppendLine(String.Format("{0} found registered with Server Manager that {1} not exist in TrustedHosts.", StringToBool(UntrustedHosts.Count > 1, "A server was", "Servers were"), StringToBool(UntrustedHosts.Count > 1, "does", "do")));
+                        @string.AppendLine();
+                        @string.AppendLine("Server(s):");
+                        foreach (string host in UntrustedHosts)
+                        {
+                            @string.AppendLine(host);
+                        }
+                        @string.AppendLine();
+                        @string.AppendLine(String.Format("Would you like to add {0}?", StringToBool(UntrustedHosts.Count > 1, "it", "them")));
+
+                        DialogResult result = MessageBox.Show(@string.ToString(), "Servers detected from Server Manager", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result == DialogResult.Yes)
+                        {
+                            foreach (string host in UntrustedHosts)
+                            {
+                                Hostnames_ListBox.Items.Add(host);
+                            }
+                        }
+                    }
+                }
+            }
+            justStarted = false;
             Finished();
         }
 
