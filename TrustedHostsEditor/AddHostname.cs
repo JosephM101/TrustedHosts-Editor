@@ -132,27 +132,23 @@ namespace TrustedHosts_Editor
                             IPHostEntry entry = Dns.GetHostEntry(Hostname);
                             Hostname_textBox.Text = entry.HostName;
                             this.DialogResult = DialogResult.OK;
-                            //Close();
                         }
                         catch
                         {
                             if (MessageBox.Show("The host could not be contacted. Add IP address anyway?", "Host not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 this.DialogResult = DialogResult.OK;
-                                //Close();
                             }
                         }
                     }
                     else if (dialogResult == DialogResult.No)
                     {
                         this.DialogResult = DialogResult.OK;
-                       // Close();
                     }
                 }
                 else
                 {
                     this.DialogResult = DialogResult.OK;
-                    //Close();
                 }
             }
         }
