@@ -42,10 +42,10 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(236, 76);
-            this.cancelButton.Margin = new System.Windows.Forms.Padding(2);
+            this.cancelButton.Location = new System.Drawing.Point(343, 108);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(63, 23);
+            this.cancelButton.Size = new System.Drawing.Size(84, 28);
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -53,10 +53,10 @@
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(303, 76);
-            this.okButton.Margin = new System.Windows.Forms.Padding(2);
+            this.okButton.Location = new System.Drawing.Point(432, 108);
+            this.okButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(64, 23);
+            this.okButton.Size = new System.Drawing.Size(85, 28);
             this.okButton.TabIndex = 1;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
@@ -65,10 +65,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 9);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(15, 11);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.Size = new System.Drawing.Size(69, 16);
             this.label1.TabIndex = 3;
             this.label1.Text = "Hostname";
             // 
@@ -76,20 +75,22 @@
             // 
             this.Hostname_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Hostname_textBox.Location = new System.Drawing.Point(12, 27);
-            this.Hostname_textBox.Margin = new System.Windows.Forms.Padding(2);
+            this.Hostname_textBox.Location = new System.Drawing.Point(16, 33);
+            this.Hostname_textBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Hostname_textBox.MaxLength = 63;
             this.Hostname_textBox.Name = "Hostname_textBox";
-            this.Hostname_textBox.Size = new System.Drawing.Size(355, 20);
+            this.Hostname_textBox.Size = new System.Drawing.Size(500, 22);
             this.Hostname_textBox.TabIndex = 0;
             this.Hostname_textBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.Hostname_textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Hostname_textBox_KeyDown);
             // 
             // testHostnameButton
             // 
-            this.testHostnameButton.Location = new System.Drawing.Point(12, 75);
+            this.testHostnameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.testHostnameButton.Location = new System.Drawing.Point(13, 108);
+            this.testHostnameButton.Margin = new System.Windows.Forms.Padding(4);
             this.testHostnameButton.Name = "testHostnameButton";
-            this.testHostnameButton.Size = new System.Drawing.Size(93, 23);
+            this.testHostnameButton.Size = new System.Drawing.Size(124, 28);
             this.testHostnameButton.TabIndex = 4;
             this.testHostnameButton.Text = "Test Hostname";
             this.testHostnameButton.UseVisualStyleBackColor = true;
@@ -98,18 +99,19 @@
             // label_IpAddress
             // 
             this.label_IpAddress.AutoSize = true;
-            this.label_IpAddress.Location = new System.Drawing.Point(12, 53);
+            this.label_IpAddress.Location = new System.Drawing.Point(16, 65);
+            this.label_IpAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_IpAddress.Name = "label_IpAddress";
-            this.label_IpAddress.Size = new System.Drawing.Size(61, 13);
+            this.label_IpAddress.Size = new System.Drawing.Size(76, 16);
             this.label_IpAddress.TabIndex = 5;
             this.label_IpAddress.Text = "IP Address:";
             this.label_IpAddress.Visible = false;
             // 
             // AddHostname
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(378, 110);
+            this.ClientSize = new System.Drawing.Size(532, 149);
             this.ControlBox = false;
             this.Controls.Add(this.label_IpAddress);
             this.Controls.Add(this.testHostnameButton);
@@ -117,8 +119,8 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.cancelButton);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "AddHostname";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Hostname";
