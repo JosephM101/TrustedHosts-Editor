@@ -103,6 +103,7 @@
             // 
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(125, 16);
+            this.toolStripProgressBar1.MarqueeAnimationSpeed = 40;
             // 
             // backgroundWorker_readTrustedHosts
             // 
