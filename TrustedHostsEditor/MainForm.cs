@@ -310,7 +310,7 @@ namespace TrustedHosts_Editor
                 ToolStrip_ShowStatus("Saving TrustedHosts...");
                 entries = Hostnames_ListBox.Items.Cast<string>().ToArray();
             });
-            Thread.Sleep(1000);
+            //Thread.Sleep(1000);
             saveTrustedHosts(entries);
         }
 
