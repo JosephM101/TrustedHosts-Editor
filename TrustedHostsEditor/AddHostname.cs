@@ -131,27 +131,28 @@ namespace TrustedHosts_Editor
                         {
                             IPHostEntry entry = Dns.GetHostEntry(Hostname);
                             Hostname_textBox.Text = entry.HostName;
-                            DialogResult = DialogResult.OK;
+                            this.DialogResult = DialogResult.OK;
+                            //Close();
                         }
                         catch
                         {
                             if (MessageBox.Show("The host could not be contacted. Add IP address anyway?", "Host not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
-                                DialogResult = DialogResult.OK;
-                                Close();
+                                this.DialogResult = DialogResult.OK;
+                                //Close();
                             }
                         }
                     }
                     else if (dialogResult == DialogResult.No)
                     {
-                        DialogResult = DialogResult.OK;
-                        Close();
+                        this.DialogResult = DialogResult.OK;
+                       // Close();
                     }
                 }
                 else
                 {
-                    DialogResult = DialogResult.OK;
-                    Close();
+                    this.DialogResult = DialogResult.OK;
+                    //Close();
                 }
             }
         }
