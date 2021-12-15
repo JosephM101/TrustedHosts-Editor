@@ -84,7 +84,7 @@ namespace TrustedHosts_Editor
 
         }
 
-        private void testHostnameButton_Click(object sender, EventArgs e)
+        void TestHost()
         {
             try
             {
@@ -108,6 +108,59 @@ namespace TrustedHosts_Editor
             catch
             {
                 MessageBox.Show("The host could not be contacted.", "Host not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void testHostnameButton_Click(object sender, EventArgs e)
+        {
+            TestHost();
+        }
+
+        private void okButton_Click(object sender, EventArgs e)
+        {
+            if (!Hostname_HasInvalidCharacters(Hostname))
+            {
+                //Check if hostname is actually a parseable IP address
+                IPAddress ip = null;
+                if (IPAddress.TryParse(Hostname, out ip))
+                {
+                    DialogResult dialogResult = MessageBox.Show("An IP address was entered. Do you want to test it and try to retrieve the hostname before adding it?", "IP Address Entered", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            IPHostEntry entry = Dns.GetHostEntry(Hostname);
+                            Hostname_textBox.Text = entry.HostName;
+                            DialogResult = DialogResult.OK;
+                        }
+                        catch
+                        {
+                            if (MessageBox.Show("The host could not be contacted. Add IP address anyway?", "Host not found", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            {
+                                DialogResult = DialogResult.OK;
+                                Close();
+                            }
+                        }
+                    }
+                    else if (dialogResult == DialogResult.No)
+                    {
+                        DialogResult = DialogResult.OK;
+                        Close();
+                    }
+                }
+                else
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+            }
+        }
+
+        private void Hostname_textBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                okButton.PerformClick();
             }
         }
     }

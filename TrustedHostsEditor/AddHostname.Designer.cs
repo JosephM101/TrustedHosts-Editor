@@ -53,7 +53,6 @@
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.okButton.Location = new System.Drawing.Point(303, 76);
             this.okButton.Margin = new System.Windows.Forms.Padding(2);
             this.okButton.Name = "okButton";
@@ -61,6 +60,7 @@
             this.okButton.TabIndex = 1;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // label1
             // 
@@ -83,6 +83,7 @@
             this.Hostname_textBox.Size = new System.Drawing.Size(355, 20);
             this.Hostname_textBox.TabIndex = 0;
             this.Hostname_textBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.Hostname_textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Hostname_textBox_KeyDown);
             // 
             // testHostnameButton
             // 
@@ -104,7 +105,7 @@
             this.label_IpAddress.Text = "IP Address:";
             this.label_IpAddress.Visible = false;
             // 
-            // AddEntry
+            // AddHostname
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -118,7 +119,7 @@
             this.Controls.Add(this.cancelButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "AddEntry";
+            this.Name = "AddHostname";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Hostname";
             this.Load += new System.EventHandler(this.AddEntry_Load);
