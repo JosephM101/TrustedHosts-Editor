@@ -124,7 +124,7 @@ namespace TrustedHosts_Editor
                 IPAddress ip = null;
                 if (IPAddress.TryParse(Hostname, out ip))
                 {
-                    DialogResult dialogResult = MessageBox.Show("An IP address was entered. Do you want to test it and try to retrieve the hostname before adding it?", "IP Address Entered", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    DialogResult dialogResult = MessageBox.Show("An IP address was entered. Do you want to try and retrieve the hostname before adding it?", "IP Address Entered", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                     if (dialogResult == DialogResult.Yes)
                     {
                         try
