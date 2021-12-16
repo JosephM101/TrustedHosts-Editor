@@ -207,13 +207,18 @@ namespace TrustedHosts_Editor
             {
                 Collection<PSObject> output = powerShell.Invoke();
                 string val = "";
-                //foreach (PSPropertyInfo info in output.ElementAt(0).Properties)
+
+                //foreach (PSObject root in output)
                 //{
-                //    if(info.Name.Contains("TrustedHosts"))
+                //    foreach (PSPropertyInfo info in root.Properties)
                 //    {
-                //        val = (string)info.Value;
+                //        if (info.Name.Contains("TrustedHosts"))
+                //        {
+                //            val = (string)info.Value;
+                //        }
                 //    }
                 //}
+
                 val = (string)output.ElementAt(0).Properties.ElementAt(7).Value;
                 // Debug.WriteLine(val);
                 foreach (string item in val.Split(','))
