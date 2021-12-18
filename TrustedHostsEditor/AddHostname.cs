@@ -155,10 +155,10 @@ namespace TrustedHosts_Editor
 
         private void Hostname_textBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                okButton.PerformClick();
-            }
+            //if (e.KeyCode == Keys.Enter)
+            //{
+            //    okButton.PerformClick();
+            //}
         }
     }
 }
