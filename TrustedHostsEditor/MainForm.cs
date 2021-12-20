@@ -138,7 +138,7 @@ namespace TrustedHosts_Editor
                 }
                 else
                 {
-                    MessageBox.Show(String.Format("Could not lookup host because hostname {0} is invalid.", Hostname), "Hostname invalid", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(String.Format("Could not look up host because hostname {0} is invalid.", Hostname), "Hostname invalid", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             };
 
@@ -156,7 +156,6 @@ namespace TrustedHosts_Editor
                 listboxContextMenu.Items.Add(removeItem);
                 listboxContextMenu.Items.Add(new ToolStripSeparator());
                 listboxContextMenu.Items.Add(testHost);
-                //listboxContextMenu.Items.Add(new ToolStripSeparator());
             }
             else
             {
