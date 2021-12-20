@@ -8,15 +8,11 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
-    - name: List Directory
-      run: ls
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
@@ -25,12 +21,9 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.5
       with:
         nuget-version: latest
-    
-    # - name: Navigate to Workspace
-    #   run: cd $GITHUB_WORKSPACE
 
-    - name: List Directory
-      run: ls
+    #- name: List Directory
+    #  run: ls
 
     - name: Create Build Directory
       run: mkdir _build
@@ -38,8 +31,8 @@ jobs:
     - name: Restore Packages
       run: nuget restore TrustedHostsEditor.sln
       
-    - name: List Directory
-      run: ls
+    #- name: List Directory
+    #  run: ls
 
     #- name: Build Solution
     #  run: |

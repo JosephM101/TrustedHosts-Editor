@@ -328,7 +328,8 @@ namespace TrustedHosts_Editor
                     List<string> UntrustedHosts = new List<string>();
                     foreach (ServerInfo server in servers)
                     {
-                        if (!Hostnames_ListBox.Items.Contains(server.Name) && server.Status == false)
+                        //if (!Hostnames_ListBox.Items.Contains(server.Name) && server.Status == false)
+                        if (!Hostnames_ListBox.Items.Contains(server.Name))
                         {
                             UntrustedHosts.Add(server.Name);
                         }
